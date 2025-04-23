@@ -1,36 +1,35 @@
-name: Build and Deploy to GitHub Pages
+name: Deploy to GitHub Pages
 
 on:
   push:
     branches:
       - main
 
+permissions:
+  contents: write
+
 jobs:
-  build-deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 🧾 Checkout source code
-        uses: actions/checkout@v3
+      - name: 🧾 Checkout code
+        uses: actions/checkout@v4
 
       - name: 🧱 Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: "18"
+          node-version: 18
           cache: "yarn"
 
-      - name: 📦 Install dependencies using Yarn
-        run: yarn install
+      - name: 📦 Install dependencies
+        run: yarn
 
-      - name: 🛠️ Build for production
-        run: yarn predeploy
-
-      - name: 🧑‍💻 Set Git identity for GitHub Pages
-        run: |
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git config --global user.name "github-actions[bot]"
+      - name: 🛠️ Build project
+        run: yarn build
 
       - name: 🚀 Deploy to GitHub Pages
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: yarn deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
