@@ -17,15 +17,15 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: "18"
-          cache: "npm"
+          cache: "yarn"
 
       - name: 📦 Install dependencies
-        run: npm install
+        run: yarn install
 
       - name: 🛠️ Build for production
-        run: npm run predeploy
+        run: yarn run predeploy
 
       - name: 🚀 Deploy to GitHub Pages
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npm run deploy
+        run: yarn run deploy
